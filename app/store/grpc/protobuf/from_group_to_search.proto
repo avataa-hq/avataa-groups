@@ -1,0 +1,61 @@
+syntax = "proto3";
+package group_search;
+
+
+service GroupSearch {
+    rpc GetProcesses (RequestGetProcesses) returns (stream ResponseGetProcesses) {}
+    rpc GetProcessesGroups (RequestGetProcessesGroups) returns (stream ResponseProcessesGroups) {}
+    rpc GetMOsByFilters (RequestGetMOsByFilters) returns (stream ResponseGetMOsByFilters) {}
+}
+
+message RequestGetProcesses {
+    string user_data = 1;
+    int64 tmo_id = 2;
+    string filters_list = 3;
+    string sort = 4;
+    string find_by_value = 5;
+    bool with_groups = 6;
+    string limit = 7;
+    string ranges_object = 8;
+}
+
+message RequestGetProcessesGroups {
+    string user_data = 1;
+    int64 tmo_id = 2;
+    string filters_list = 3;
+    string sort = 4;
+    string find_by_value = 5;
+    bool with_groups = 6;
+    string limit = 7;
+    string ranges_object = 8;
+    string group_by = 9;
+    int32 min_group_qty = 10;
+}
+
+message ResponseGetProcesses {
+    string mo = 1;
+}
+
+message ProcessGroupKey {
+    string grouped_by = 1;
+    string grouping_value = 2;
+}
+
+message ProcessesGroupItem {
+    repeated ProcessGroupKey group = 1;
+    int32 quantity = 2;
+}
+
+message ResponseProcessesGroups {
+    ProcessesGroupItem item = 1;
+}
+
+message RequestGetMOsByFilters {
+    int64 tmo_id = 1;
+    string filters_list = 2;
+    bool with_groups = 3;
+}
+
+message ResponseGetMOsByFilters {
+    repeated string mos = 1;
+}

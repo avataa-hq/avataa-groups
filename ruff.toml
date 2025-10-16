@@ -1,0 +1,72 @@
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    "app/migrations/",
+    "*_pb2.py",
+    "*_pb2.pyi",
+    "*_grpc.py",
+    "temporary_*.py",
+]
+
+# The formatter wraps lines at a length of 50, default 88.
+line-length = 80
+indent-width = 4
+
+# Group violations by containing file.
+# output-format = "grouped"
+
+# Assume Python 3.11
+target-version = "py311"
+
+[lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`) codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+select = [
+    # pycodestyle
+    "E",
+    # pycodestyle warnings
+    "W",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    # "UP",
+    # flake8-bugbear
+    # "B",
+    # flake8-bandit [security]
+    "S1",
+    # flake8-simplify
+    # "SIM",
+    # isort
+    # "I",
+]
+ignore = []
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+[lint.pycodestyle]
+# E501 reports lines that exceed the length of 120.
+max-line-length = 120
+
+# W505
+# max-doc-length = 88
+
+[lint.per-file-ignores]
+"tests/**/*.py" = [
+    # asserts allowed in tests
+    "S101",
+]
+
+[format]
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"

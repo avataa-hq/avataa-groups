@@ -1,0 +1,97 @@
+syntax = "proto3";
+package inventory_instances;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+message MO {
+  int64 id = 1;
+  string name = 2;
+  google.protobuf.Struct pov = 3;
+  google.protobuf.Struct geometry = 4;
+  bool active = 5;
+  double latitude = 6;
+  double longitude = 7;
+  int64 tmo_id = 8;
+  int64 p_id = 9;
+  int64 point_a_id = 10;
+  int64 point_b_id = 11;
+  string model = 12;
+  int32 version = 13;
+  string status = 14;
+  google.protobuf.Timestamp creation_date = 15;
+  google.protobuf.Timestamp modification_date = 16;
+  int32 document_count = 17;
+  optional string label = 18;
+  string description = 19;
+}
+
+message TMO {
+  int64 id = 1;
+  string name = 2;
+  int64 p_id = 3;
+  string icon = 4;
+  string description = 5;
+  bool virtual = 6;
+  bool global_uniqueness = 7;
+  int64 latitude = 8;
+  int64 longitude = 9;
+  string created_by = 10;
+  string modified_by = 11;
+  google.protobuf.Timestamp creation_date = 12;
+  google.protobuf.Timestamp modification_date = 13;
+  repeated int64 primary = 14 [packed = true];
+  int32 version = 15;
+  int32 status = 16;
+  string lifecycle_process_definition = 17;
+  bool materialize = 18;
+  int64 severity_id = 19;
+  string geometry_type = 20;
+  repeated int64 points_constraint_by_tmo = 21 [packed = true];
+  bool minimize = 22;
+  repeated int64 label = 23;
+}
+
+message TPRM {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  string val_type = 4;
+  bool multiple = 5;
+  bool required = 6;
+  bool returnable = 7;
+  string constraint = 8;
+  string prm_link_filter = 9;
+  string group = 10;
+  int64 tmo_id = 11;
+  string created_by = 12;
+  string modified_by = 13;
+  google.protobuf.Timestamp creation_date = 14;
+  google.protobuf.Timestamp modification_date = 15;
+  int32 version = 16;
+  string field_value = 17;
+}
+
+message PRM{
+  int64 id = 1;
+  string value = 2;
+  int64 tprm_id = 3;
+  int64 mo_id = 4;
+  int32 version = 5;
+}
+
+message ListMO {
+  repeated MO objects = 1;
+}
+
+message ListTMO {
+  repeated TMO objects = 1;
+}
+
+message ListTPRM {
+  repeated TPRM objects = 1;
+}
+
+message ListPRM {
+  repeated PRM objects = 1;
+}

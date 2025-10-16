@@ -1,0 +1,354 @@
+syntax = "proto3";
+package mo_info;
+import "google/protobuf/any.proto";
+
+
+// The greeting service definition.
+service Informer {
+  // Sends a greeting
+  rpc GetParamsValuesForMO (InfoRequest) returns (InfoReply) {}
+  rpc GetTMOidForMo (IntValue) returns (MOInfo) {}
+  rpc GetObjWithParams (RequestForObjInfoByTMO) returns (stream ResponseWithObjInfoByTMO) {}
+  rpc GetFilteredObjWithParams (RequestForFilteredObjInfoByTMO) returns (ResponseMOdata) {}
+  /// Return pickle information about Obj with params as stream chunked by proto size
+  rpc GetFilteredObjWithParamsStream (RequestForFilteredObjInfoByTMO) returns (stream ResponseMOdata) {}
+  rpc GetTMOlifecycle(RequestTMOlifecycleByTMOidList) returns (ResponseTMOlifecycleByTMOidList) {}
+  rpc GetMOSeverityMaxValue(RequestSeverityMoId) returns (ResponseSeverityMoId) {}
+  rpc GetMOQuantityBySeverity(RequestSeverityValues) returns (ResponseMOQuantityBySeverity) {}
+  rpc GetTPRMNames (RequestTPRMIds) returns (ResponseTPRMNames) {}
+  rpc GetFilteredObjSpecial (RequestForFilteredObjSpecial) returns (stream ResponseMOdataSpecial) {}
+  rpc GetHierarchyLevelChildren (RequestListLevels) returns (ResponseListNodes) {}
+  rpc GetMODetailsWithTPRMNames (RequestMODetailsWithTPRMNames) returns (ResponseMODetailsWithTPRMNames) {}
+  rpc GetColumnsForMaterializedView (RequestTMOAttrsAndTypes) returns (ResponseTMOAttrsAndTypes) {}
+  rpc GetTMOInfoByTMOId (TMOInfoRequest) returns (TMOInfoResponse) {}
+  rpc GetTMOInfoByMOId (MOInfoRequest) returns (ResponseListInt) {}
+  rpc GetObjWithParamsLimited (RequestObjWithParamsLimited) returns (stream ResponseObjWithParamsLimited) {}
+  rpc GetTPRMData (RequestTPRMData) returns (ResponseTPRMData) {}
+  rpc GetTPRMNameToTypeMapper (RequestTPRMNameToType) returns (DeleteMOIdsResponse) {}
+  rpc DeleteMOsByIds (DeleteMOIdsRequest) returns (DeleteMOIdsResponse) {}
+  rpc GetAllTMO (GetAllTMORequest) returns (GetAllTMOResponse) {}
+  rpc GetAllMOWithParamsByTMOId (GetAllMOWithParamsByTMOIdRequest) returns (stream GetAllMOWithParamsByTMOIdResponse) {}
+  rpc GetMODataByIds (GetMODataByIdsRequest) returns (stream GetMODataByIdsResponse) {}
+  rpc GetPRMsByPRMIds (GetPRMsByPRMIdsRequest) returns (stream GetPRMsByPRMIdsResponse) {}
+  rpc GetTPRMAllData (RequestGetTPRMAlldata) returns (stream ResponseGetTPRMAlldata) {}
+  rpc GetAllTPRMSByTMOId (RequestGetAllTPRMSByTMOId) returns (stream ResponseGetAllTPRMSByTMOId) {}
+  rpc GetAllRawPRMDataByTPRMId (RequestGetAllRawPRMDataByTPRMId) returns (stream ResponseGetAllRawPRMDataByTPRMId) {}
+  rpc GetFilteredObjSpecialExperimental (RequestForFilteredObjSpecial) returns (stream ResponseMOdataSpecial) {}
+  rpc GetAllMOByTMOIdWithSpecialParameters (MOWithSpecialParametersRequest) returns (stream MOWithSpecialParametersResponse) {}
+  rpc GetMOsNamesByIds (RequestGetMOsNamesByIds) returns (ResponseGetMOsNamesByIds) {}
+}
+
+// The request message containing the mo_id and lists of tprm_ids.
+message DeleteMOIdsRequest {
+  repeated int32 mo_id = 1;
+}
+
+message DeleteMOIdsResponse {
+  int32 deleted_quantity = 1;
+}
+
+message TMOInfoRequest {
+  repeated int32 tmo_id = 1;
+}
+
+message MOInfoRequest {
+  repeated int32 mo_ids = 1;
+}
+
+message TMOInfoResponse {
+  string tmo_info = 1;
+}
+
+message InfoRequest {
+  int32 mo_id = 1;
+  repeated int32 tprm_ids = 2 [packed = true];
+}
+
+message RequestSeverityMoId {
+    int32 tmo_id = 1;
+    repeated int32 mo_ids = 2 [packed = true];
+}
+
+message ResponseSeverityMoId {
+  int32 max_severity = 1;
+}
+
+
+message RequestSeverityValues {
+    string dict_severities = 1;
+    string dict_tmo_with_mo_ids = 2;
+
+}
+
+message ResponseMOQuantityBySeverity {
+    string dict_mo_info = 1;
+}
+
+
+message ValueOfDict{
+    repeated google.protobuf.Any mo_tprm_value = 1;
+}
+
+// The response message containing the dict with tprm_ids and their values for requested mo_id
+message InfoReply {
+   map<int32, ValueOfDict> mo_info = 1;
+}
+
+message MOInfo {
+    int32 tmo_id = 1;
+    int32 p_id = 2;
+}
+
+message StringValue {
+    string value = 1;
+}
+
+message IntValue {
+    int32 value = 1;
+}
+
+message FloatValue {
+    float value = 1;
+}
+
+message BoolValue {
+    bool value = 1;
+}
+
+message RequestForObjInfoByTMO {
+    int32 object_type_id = 1;
+    repeated int32 tprm_ids = 2 [packed = true];
+    int32 mo_p_id = 3;
+}
+
+message ResponseListInt {
+  repeated int32 values = 1;
+}
+
+message ResponseWithObjInfoByTMO {
+  int32 mo_id = 1;
+  map<int32, string>  tprm_values = 2;
+  int32 p_id = 3;
+}
+
+message RequestTMOlifecycleByTMOidList {
+    repeated int32 tmo_ids = 1 [packed = true];
+
+}
+
+message ResponseTMOlifecycleByTMOidList {
+    repeated int32 tmo_ids_with_lifecycle = 1 [packed = true];
+
+}
+
+message RequestForFilteredObjInfoByTMO {
+    int32 object_type_id = 1;
+    string query_params = 2;
+    string order_by = 3;
+    string decoded_jwt = 4;
+    repeated int32 mo_ids = 5 [packed = true];
+}
+
+message ResponseMOdata {
+    repeated string objects_with_parameters = 1;
+}
+
+message RequestTPRMIds {
+    repeated int32 tprm_ids = 1 [packed = true];
+}
+
+message ResponseTPRMName {
+    int32 tprm_id = 1;
+    string tprm_name = 2;
+}
+
+message ResponseTPRMNames {
+    repeated ResponseTPRMName items = 1;
+}
+
+message RequestForFilteredObjSpecial {
+    int32 object_type_id = 1;
+    string query_params = 2;
+    string order_by = 3;
+    string decoded_jwt = 4;
+    repeated int32 mo_ids = 5 [packed = true];
+    repeated int32 p_ids = 6;
+    bool only_ids = 7;
+    repeated int32 tprm_ids =  8 [packed = true];
+    repeated string mo_attrs = 9;
+}
+
+message ResponseMOdataSpecial {
+    repeated int32 mo_ids = 1 [packed = true];
+    repeated string pickle_mo_dataset = 2;
+}
+
+
+message RequestNode {
+    string node_id = 1;
+    repeated int32 mo_ids = 2 [packed = true];
+}
+
+message RequestLevel {
+    repeated RequestNode level_data = 1;
+    int32 level_tmo_id = 2;
+    repeated int32 path_of_children_tmos = 3 [packed = true];
+    repeated int32 collect_data_for_tmos =  4 [packed = true];
+}
+
+message RequestListLevels {
+    repeated RequestLevel items = 1;
+}
+
+message ResponseNode {
+    string node_id = 1;
+    repeated int32 children_mo_ids = 2 [packed = true];
+}
+
+message ResponseListNodes {
+    repeated ResponseNode items = 1;
+}
+
+message RequestMODetailsWithTPRMNames {
+    int32 tmo_id = 1;
+}
+
+message ResponseMODetailsWithTPRMNames {
+    repeated string column = 1;
+}
+
+message RequestTMOAttrsAndTypes{
+    int32 tmo_id = 1;
+}
+
+message TMOAttrAndType {
+    string name = 1;
+    string type = 2;
+    bool multiply = 3;
+}
+
+message ResponseTMOAttrsAndTypes {
+    repeated TMOAttrAndType attrs = 1;
+}
+
+message RequestObjWithParamsLimited {
+    int32 tmo_id = 1;
+    repeated string tprm_names = 2;
+    int32 limit = 3;
+    optional int32 offset = 4;
+}
+
+message ResponseObjWithParamsLimited {
+    string data = 1;
+}
+
+message RequestTPRMData{
+    repeated int32 tprm_ids = 1 [packed = true];
+}
+
+message ResponseTPRMData {
+    repeated string tprms_data = 1;
+}
+
+message RequestTPRMNameToType {
+    int32 tmo_id = 1;
+    repeated string columns = 2;
+}
+
+message ResponseTPRMNameToType {
+    map <string, string> mapper = 1;
+}
+
+message GetAllTMORequest {
+}
+
+message GetAllTMOResponse {
+  repeated string tmo_info = 1;
+}
+
+message GetAllMOWithParamsByTMOIdRequest {
+    int32 tmo_id = 1;
+    optional bool replace_links = 2;
+}
+
+message GetAllMOWithParamsByTMOIdResponse {
+    repeated string mos_with_params = 1;
+}
+
+message GetMODataByIdsRequest{
+    repeated int32 mo_ids = 1 [packed = true];
+}
+
+message MOData{
+    int32 id = 1;
+    string name = 2;
+    int32 tmo_id = 3;
+}
+
+message GetMODataByIdsResponse{
+    repeated MOData list_of_mo = 1;
+}
+
+message GetPRMsByPRMIdsRequest {
+    repeated int32 prm_ids = 1 [packed = true];
+}
+
+message PRMMsgValueAsString {
+    int32 id = 1;
+    int32 tprm_id = 2;
+    int32 version = 3;
+    string value = 4;
+}
+
+message GetPRMsByPRMIdsResponse {
+    repeated PRMMsgValueAsString list_of_prm = 1;
+}
+
+message RequestGetTPRMAlldata{
+    repeated int32 tprm_ids = 1 [packed = true];
+}
+
+message ResponseGetTPRMAlldata {
+    repeated string tprms_data = 1;
+}
+
+message RequestGetAllTPRMSByTMOId {
+    int32 tmo_id = 1;
+}
+
+message ResponseGetAllTPRMSByTMOId {
+    repeated string tprms_data = 1;
+}
+
+message RequestGetAllRawPRMDataByTPRMId {
+    int32 tprm_id = 1;
+}
+
+message ResponseGetAllRawPRMDataByTPRMIdInnerMsg {
+    int32 id = 1;
+    int32 version = 2;
+    int32 tprm_id = 3;
+    int32 mo_id =4;
+    string value = 5;
+}
+
+message ResponseGetAllRawPRMDataByTPRMId {
+    repeated ResponseGetAllRawPRMDataByTPRMIdInnerMsg prms = 1;
+}
+
+message MOWithSpecialParametersRequest {
+    int32 tmo_id = 1;
+    repeated int32 tprm_ids = 2;
+}
+
+message MOWithSpecialParametersResponse {
+    repeated string mos_with_params = 1;
+}
+
+message RequestGetMOsNamesByIds {
+    repeated int64 mo_ids = 1;
+}
+
+message ResponseGetMOsNamesByIds {
+    map<int64, string> mo_names = 1;
+}

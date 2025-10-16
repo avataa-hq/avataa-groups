@@ -1,0 +1,76 @@
+syntax = "proto3";
+package zeebe.severity;
+
+service Severity {
+  rpc GetSeverityByFilters (FilterInput) returns (ListResponseSeverity) {}
+  rpc GetSeverityByRanges (ByRangesInput) returns (ListResponseSeverity) {}
+  rpc GetProcesses (ProcessesInput) returns (ProcessesResponse) {}
+  rpc GetSeverityByHierarchy (ByHierarchyInput) returns (ListResponseSeverity) {}
+  rpc GetProcessInstanceForSpecialTMO (GetProcessInstanceForSpecialTMORequest) returns (stream GetProcessInstanceForSpecialTMOResponse) {}
+}
+
+message ByHierarchyInput {
+  int32 hierarchy_id = 1;
+  string parent_id = 2;
+  int32 tmo_id = 3;
+  repeated string filters = 4;
+}
+
+message FilterInput {
+  repeated string filters = 1;
+}
+
+message ResponseSeverityItem {
+  string filter_name = 1;
+  int32 count = 2;
+  int32 max_severity = 3;
+}
+
+message ListResponseSeverity {
+  repeated ResponseSeverityItem items = 1;
+}
+
+message ByRangesInput {
+  repeated string filters_list = 1;
+  string ranges_object = 2;
+  repeated int32 tmo_ids = 3;
+  repeated int32 mo_ids = 4;
+  string find_by_value = 5;
+}
+
+message ProcessesInput {
+  repeated string filters_list = 1;
+  optional string ranges_object = 2;
+  repeated int32 tmo_ids = 3;
+  repeated int32 mo_ids = 4;
+  repeated string sort = 5;
+  string limit = 6;
+  optional string find_by_value = 7;
+  optional bool with_groups = 8;
+}
+
+message ProcessesResponse {
+   repeated string rows = 1;
+   int32 total_count = 2;
+}
+
+
+message GetProcessInstanceForSpecialTMORequest{
+    int64 tmo_id = 1;
+}
+
+message GetProcessInstanceForSpecialTMOItem{
+    int64 id = 1;
+    string processDefinitionKey = 2;
+    int64 processDefinitionVersion = 3;
+    int64 processDefinitionId = 4;
+    int64 processInstanceId = 5;
+    string startDate =6;
+    string endDate = 7;
+    int64 duration = 8;
+    string state = 9;
+}
+
+message GetProcessInstanceForSpecialTMOResponse{
+    repeated GetProcessInstanceForSpecialTMOItem pr_inst_data = 1;
+}

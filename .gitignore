@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# Temp files
+*~
+~$*
+temporary_*.py
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+local.py
+.pytest_cache/
+.mypy_cache
+
+# Linting
+.ruff_cache
+
+# Tests
+htmlcov/
+.coverage
+coverage.xml
+
+# IDE
+.idea/
+.vscode/
+
+# Virtual environment directories
+.venv/
+venv/
+env/
+.env*
+!.env.example
+
+# Other
+cprofile.py
+.pre-commit-config.yaml

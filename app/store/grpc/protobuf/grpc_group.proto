@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package grpc_group;
+
+service Group {
+  rpc CreateGroups(RequestCreateGroup) returns (ResponseGroupStatus) {}
+  rpc DeleteGroups(RequestListGroupName) returns (ResponseGroupStatus) {}
+  rpc AddElementsToGroup(RequestElements) returns (ResponseGroupStatus) {}
+  rpc RemoveElementsFromGroup(RequestElements) returns (ResponseGroupStatus) {}
+  rpc ExistedGroup(RequestListGroupName) returns (ResponseListGroupName) {}
+  rpc ListGroupWithElements(RequestGroupByType) returns (ResponseListGroupName) {}
+  rpc ListElementsInGroups(RequestListGroupName) returns (ResponseElements) {}
+  rpc ListGroupByTMOID(RequestListGroupByTMOID) returns (stream ResponseListGroupByTMOID) {}
+  rpc ListMOIdsInSpecialGroup(RequestListMOIdsInSpecialGroup) returns (stream ResponseListMOIdsInSpecialGroup) {}
+  rpc GetGroupStatistic(RequestGetGroupStatistic) returns (ResponseGetGroupStatistic) {}
+}
+enum GroupType {
+  object_group = 0;
+  process_group = 1;
+}
+
+message GroupInfoCreate {
+  string group_name = 1;
+  string group_type = 2;
+  int32 tmo_id = 3;
+}
+
+message Elements {
+  string group_name = 1;
+  repeated int32 entity_id = 2;
+}
+
+message RequestCreateGroup {
+  repeated GroupInfoCreate group_info = 1;
+}
+
+message RequestListGroupName {
+  repeated string group_name = 1;
+}
+
+message RequestGroupByType {
+  GroupType group_type = 1;
+}
+
+message ResponseGroupStatus {
+  bool response = 1;
+}
+
+message RequestElements {
+  repeated Elements elements = 1;
+}
+
+message ResponseListGroupName {
+  repeated string group_name = 1;
+}
+
+message ResponseElements {
+  repeated Elements elements = 1;
+}
+
+message RequestListGroupByTMOID{
+    int64 tmo_id = 1;
+}
+
+message ResponseListGroupByTMOID {
+    repeated string group_names = 1;
+}
+
+message RequestListMOIdsInSpecialGroup{
+    string group_name = 1;
+}
+
+message ResponseListMOIdsInSpecialGroup{
+    repeated int64 entity_ids = 1;
+}
+
+message RequestGetGroupStatistic{
+    string group_name = 1;
+}
+
+message ResponseGetGroupStatistic{
+    string group_statistic = 1;
+}

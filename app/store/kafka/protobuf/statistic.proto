@@ -1,0 +1,30 @@
+syntax = "proto3";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+message Statistic {
+  int64 id = 1;
+  string name = 2;
+  string groupName = 3;
+  google.protobuf.Struct pov = 4;
+  google.protobuf.Struct geometry = 5;
+  bool active = 6;
+  double latitude = 7;
+  double longitude = 8;
+  int64 tmo_id = 9;
+  int64 p_id = 10;
+  int64 point_a_id = 11;
+  int64 point_b_id = 12;
+  string model = 13;
+  int32 version = 14;
+  string status = 15;
+  google.protobuf.Timestamp creation_date = 16;
+  google.protobuf.Timestamp modification_date = 17;
+  string params = 18;
+  int32 document_count = 19;
+  string group_type = 20;
+}
+
+message DeleteStatistic {
+  string groupName = 1;
+}

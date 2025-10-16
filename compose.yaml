@@ -1,0 +1,60 @@
+name: avataa-platform
+
+# x-logging: &logging
+#   logging:
+#     driver: loki
+#     options:
+#       loki-url: http://loki:3100/loki/api/v1/push
+#       loki-external-labels: job=dockerlogs,owner=avataa,environment=${PLATFORM_PROJECT_ENVIRONMENT:?}
+
+x-logging: &logging
+  logging:
+    options:
+      max-size: 100m
+
+x-networks: &networks
+  networks:
+    - avataa-platform
+
+x-restart: &restart
+  restart: always
+
+networks:
+  avataa-platform:
+    external: true
+
+
+services:
+
+  group-builder:
+    <<: [*logging, *networks, *restart]
+    image: ${REGISTRY_URL:?}/${PLATFORM_PROJECT_NAME:?}/ms/group-builder:${GROUP_BUILDER_VERSION:?}
+    container_name: group-builder
+    # ports:
+    #   - "8000:8000"
+    #   - "50051:50051"
+    expose:
+      - "8000"
+      - "50051"
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/8000 && :> /dev/tcp/127.0.0.1/50051 || exit 1'"]
+      interval: 3s
+      timeout: 1s
+      retries: 10
+    hostname: group-builder
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 4000M
+    #     reservations:
+    #       cpus: '0.1'
+    #       memory: 100M
+
+  group-builder-healthcheck:
+    <<: *networks
+    image: ${REGISTRY_URL:?}/${PLATFORM_PROJECT_NAME:?}/curl:${HEALTHCHECK_VERSION:?}
+    container_name: group-builder-healthcheck
+    depends_on:
+      group-builder:
+        condition: service_healthy
