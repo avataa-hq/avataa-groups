@@ -102,7 +102,7 @@ UVICORN_WORKERS=<uvicorn_workers_number>
 
 #### Compose
 
-- `REGISTRY_URL` - Docker regitry URL, e.g. `harbor.avataa.dev`
+- `REGISTRY_URL` - Docker regitry URL, e.g. `harbor.domain.com`
 - `PLATFORM_PROJECT_NAME` - Docker regitry project Docker image can be downloaded from, e.g. `avataa`
 
 ### Requirements
